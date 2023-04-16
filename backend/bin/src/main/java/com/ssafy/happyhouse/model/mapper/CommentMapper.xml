@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.model.mapper.CommentMapper">
+
+	<!-- bno에 해당하는 댓글 조회 -->
+	<select id="list" resultType="com.ssafy.happyhouse.model.dto.CommentDto">
+		select comment_no, user_name, ccontent, cwrite_date, bno
+		from comment_tb
+		where bno = #{bno}
+		order by cwrite_date desc
+	</select>
+
+	<!-- 댓글 정보 등록 -->
+	<insert id="create" parameterType="com.ssafy.happyhouse.model.dto.CommentDto"
+	useGeneratedKeys="true" keyProperty="comment_no">
+		insert into comment_tb(
+			user_name, ccontent, cwrite_date, bno
+		) values (
+			#{user_name}, #{ccontent}, now(), #{bno}
+		)
+	</insert>
+	
+	<!-- 댓글  정보 수정 -->
+	<update id="modify" parameterType="com.ssafy.happyhouse.model.dto.CommentDto">
+		<![CDATA[
+		update comment_tb
+		set ccontent = #{ccontent}
+		where comment_no = #{comment_no}
+		]]>
+	</update>
+
+	<!-- comment_no에 따른 책 정보 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete
+		from comment_tb
+		where comment_no = #{comment_no}
+	</delete>
+
+</mapper>
+

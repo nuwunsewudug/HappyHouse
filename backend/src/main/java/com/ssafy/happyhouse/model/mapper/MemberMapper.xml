@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.model.mapper.MemberMapper">
+	<insert id="insert" parameterType="com.ssafy.happyhouse.model.dto.MemberDto">
+		INSERT INTO MEMBER_TB (ID, PASSWORD, NAME, EMAIL) VALUES(#{id},#{password},#{name},#{email})
+	</insert>
+	
+	<select id="selectOne" resultType="com.ssafy.happyhouse.jwt.dto.UserRequest">
+		SELECT USER_ID, USER_PW, USER_EMAIL, MY_DONG_CODE FROM USER WHERE USER_ID=#{userId}
+	</select>
+	
+	<select id="checkAuth" resultType="int">
+		SELECT ID FROM USER WHERE USER_ID = #{id}
+	</select>
+	
+	<delete id="delete" parameterType="com.ssafy.happyhouse.jwt.dto.UserRequest">
+		DELETE FROM USER WHERE USER_ID=#{id}
+	</delete>
+
+	<delete id="deleteAuth" parameterType="com.ssafy.happyhouse.jwt.entity.User">
+		DELETE FROM AUTH WHERE ID=#{key}
+	</delete>
+	
+	<update id="update" parameterType="com.ssafy.happyhouse.model.dto.MemberDto">
+		UPDATE MEMBER_TB SET PASSWORD=#{password}, NAME=#{name}, EMAIL=#{email}, FAVCCODE=#{favCcode} WHERE ID=#{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.model.mapper.BootaCommentMapper">
+
+	<!-- bno에 해당하는 댓글 조회 -->
+	<select id="list" resultType="com.ssafy.happyhouse.model.dto.BootaCommentDto">
+		select comment_no, like_count, ccontent, btbno
+		from bootacomment_tb
+		where btbno = #{btbno}
+		order by like_count desc
+	</select>
+
+	<update id="updateLike" parameterType="int">
+		UPDATE
+		BOOTACOMMENT_TB
+		SET
+		LIKE_COUNT=LIKE_COUNT+1
+		WHERE COMMENT_NO=#{commentNo}
+	</update>
+
+	<!-- 댓글 정보 등록 -->
+	<insert id="create" parameterType="com.ssafy.happyhouse.model.dto.BootaCommentDto"
+	useGeneratedKeys="true" keyProperty="comment_no">
+		insert into bootacomment_tb(
+			ccontent, like_count, btbno
+		) values (
+			#{ccontent}, 0, #{btbno}
+		)
+	</insert>
+	
+	<!-- 댓글  정보 수정 -->
+	<update id="modify" parameterType="com.ssafy.happyhouse.model.dto.BootaCommentDto">
+		<![CDATA[
+		update comment_tb
+		set ccontent = #{ccontent}
+		where comment_no = #{comment_no}
+		]]>
+	</update>
+
+	<!-- comment_no에 따른 책 정보 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete
+		from comment_tb
+		where comment_no = #{comment_no}
+	</delete>
+
+</mapper>
+

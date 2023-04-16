@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.model.mapper.BootaBoardMapper">
+
+	<select id="selectOne" parameterType="int"
+		resultType="com.ssafy.happyhouse.model.dto.BootaBoardDto">
+		SELECT
+		BTBNO,  BTB_TITLE, BTB_CONTENT, BTB_READ_COUNT,BTB_WRITE_DATE,LIKE_COUNT,BTB_PW,GUGUNCODE
+		FROM
+		BOOTABOARDMAIN_TB WHERE BTBNO=#{btbno}
+	</select>
+
+	<select id="selectHotBoard" resultType="com.ssafy.happyhouse.model.dto.BootaBoardDto">
+		SELECT BTB_TITLE, BTB_READ_COUNT, BTB_WRITE_DATE, LIKE_COUNT, BTB_CONTENT, BTBNO
+		FROM BOOTABOARDMAIN_TB
+		ORDER BY LIKE_COUNT DESC LIMIT 0,1
+	</select>
+	
+	<select id="selectList"
+		resultType="com.ssafy.happyhouse.model.dto.BootaBoardDto">
+		SELECT
+		*
+		FROM BOOTABOARDMAIN_TB
+		WHERE GUGUNCODE = #{gugun}  
+		ORDER BY BTBNO DESC LIMIT #{start},#{count}
+	</select>
+
+	<select id="searchList"
+		resultType="com.ssafy.happyhouse.model.dto.BootaBoardDto">
+		SELECT
+		*
+		FROM BOOTABOARDMAIN_TB
+		WHERE BTB_TITLE LIKE CONCAT('%',#{keyword},'%')
+		ORDER BY BTBNO DESC LIMIT #{start},#{count}
+	</select>
+
+	<select id="selectTotalCount" resultType="int">
+		SELECT COUNT(*) FROM BOOTABOARDMAIN_TB WHERE GUGUNCODE = #{gugun}
+	</select>
+
+	<select id="selectSearchCount" resultType="int">
+		SELECT COUNT(*) FROM BOOTABOARDMAIN_TB WHERE BTB_TITLE LIKE CONCAT('%',#{keyword},'%') 
+	</select>
+
+	<update id="updateReadCount" parameterType="int">
+		UPDATE
+		BOOTABOARDMAIN_TB
+		SET
+		BTB_READ_COUNT=BTB_READ_COUNT+1
+		WHERE BTBNO=#{btbno}
+	</update>
+	<!--  좋아요   -->
+	<!--<update id="updateLikeCount" parameterType="int">
+		UPDATE
+		BOOTABOARDMAIN_TB
+		SET
+		LIKE_COUNT=LIKE_COUNT+1
+		WHERE BTBNO=#{btbno}
+	</update>
+-->
+	<update id="updateLike" parameterType="int">
+		UPDATE
+		BOOTABOARDMAIN_TB
+		SET
+		LIKE_COUNT=LIKE_COUNT+1
+		WHERE BTBNO=#{btbno}
+	</update>
+
+	<insert id="insertBoard"
+		parameterType="com.ssafy.happyhouse.model.dto.BootaBoardDto"
+		useGeneratedKeys="true" keyProperty="btbno">
+		INSERT INTO
+		BOOTABOARDMAIN_TB(BTB_TITLE, BTB_CONTENT, BTB_READ_COUNT, BTB_WRITE_DATE,LIKE_COUNT,BTB_PW,GUGUNCODE)
+		VALUES(#{btb_title},#{btb_content},0,now(),0,#{btb_pw},#{guguncode})
+	</insert>
+
+	<update id="updateBoard" parameterType="com.ssafy.happyhouse.model.dto.BootaBoardDto">
+		UPDATE BOOTABOARDMAIN_TB
+		SET BTB_TITLE = #{btb_title},
+		BTB_CONTENT = #{btb_content},
+		BTB_WRITE_DATE = now(),
+		LIKE_COUNT=#{like_count},
+		BTB_PW=#{btb_pw},
+		GUGUNCODE=#{guguncode}
+		WHERE BTBNO = #{btbno}
+	</update>
+
+	<!-- 게시글 삭제 -->
+	<delete id="deleteBoard" parameterType="int">
+		DELETE
+		FROM BOOTABOARDMAIN_TB
+		WHERE BTBNO = #{btbno}
+	</delete>
+
+
+
+</mapper>
